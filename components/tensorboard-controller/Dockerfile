@@ -5,7 +5,7 @@
 #
 # This is necessary because the Jupyter controller now depends on
 # components/common
-FROM golang:1.12.5 as builder
+FROM golang:1.16 as builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -14,7 +14,7 @@ COPY tensorboard-controller /workspace/tensorboard-controller
 COPY common /workspace/common
 # cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
-RUN cd /workspace/tensorboard-controller && GIT_SSL_NO_VERIFY=1 go mod download
+RUN cd /workspace/tensorboard-controller && go mod download
 
 WORKDIR /workspace/tensorboard-controller
 

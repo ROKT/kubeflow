@@ -14,7 +14,7 @@ COPY tensorboard-controller /workspace/tensorboard-controller
 COPY common /workspace/common
 # cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
-RUN cd /workspace/tensorboard-controller && go mod download
+RUN cd /workspace/tensorboard-controller && GIT_SSL_NO_VERIFY=1 go mod download
 
 WORKDIR /workspace/tensorboard-controller
 
@@ -27,7 +27,7 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot 
+FROM gcr.io/distroless/static:nonroot
 WORKDIR /
 COPY --from=builder /workspace/tensorboard-controller/manager .
 USER nonroot:nonroot

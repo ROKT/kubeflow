@@ -249,7 +249,7 @@ func generateDeployment(tb *tensorboardv1alpha1.Tensorboard, log logr.Logger, r 
 					Containers: []corev1.Container{
 						{
 							Name:            "tensorboard",
-							Image:           "tensorflow/tensorflow:2.1.0",
+							Image:           "035088524874.dkr.ecr.us-west-2.amazonaws.com/cached/tensorflow/tensorflow:2.5.1",
 							ImagePullPolicy: "IfNotPresent",
 							Command:         []string{"/usr/local/bin/tensorboard"},
 							WorkingDir:      "/",

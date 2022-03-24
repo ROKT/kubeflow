@@ -1,0 +1,33 @@
+steps:
+  - label: ":docker: Build the roktified tensorboard controller"
+    plugins:
+      - rokt/create-ecr#v1.5.0:
+          lifecycle-policy: infra/ecr/lifecycle-policy.json
+          name: cached/j1r0q0g6/notebooks/tensorboard-controller
+          repository-policy: infra/ecr/repository-policy.json
+          repository-tags-file: infra/ecr/repository-tags.json
+          scan-on-push: true
+          regions:
+          - us-west-2
+          - ap-southeast-2
+          - us-east-1
+          - eu-west-1
+      - rokt/docker-ecr-publish#v2.4.0:
+          ecr-name: cached/j1r0q0g6/notebooks/tensorboard-controller
+          build-context: components
+          dockerfile: components/tensorboard-controller/Dockerfile
+          args:
+            COMMIT_HASH: "BUILDKITE_COMMIT"
+            TAG_NAME: "1.5.1-roktified"
+          additional-build-args: '--cache-from 035088524874.dkr.ecr.us-west-2.amazonaws.com/cached/j1r0q0g6/notebooks/tensorboard-controller:roktified-latest --cache-from 035088524874.dkr.ecr.us-west-2.amazonaws.com/cached/j1r0q0g6/notebooks/tensorboard-controller:${SANITISED_BRANCH_NAME}-latest'
+          tags:
+          - roktified-${SANITISED_BRANCH_NAME}-${BUILDKITE_BUILD_NUMBER}
+          - roktified-${SANITISED_BRANCH_NAME}-latest
+          default-tags:
+          - roktified-latest
+          add-latest-tag: false
+          regions:
+          - us-west-2
+          - ap-southeast-2
+          - us-east-1
+          - eu-west-1
